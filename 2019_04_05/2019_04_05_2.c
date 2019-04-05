@@ -15,14 +15,16 @@ int main(){
 	printf("\nEntre com o valor de x para calcular arctan(x): ");
 	scanf("%f",&val);
 
-	if(val >= -1 && val <= 1){
+	if(val > -1 && val < 1){
 
 
 
 		printf("\nEntre com o nro de termos: ");
 		scanf("%d",&repTimes);
-
-		printf("\nResultado para arctan(%g)= %f\n\n", val, arctang(val, repTimes, CURR_START, SUM_START));
+		if( repTimes > 0 )
+			printf("\n\nResultado para arctan(%g)= %f\n\n", val, arctang(val, repTimes, CURR_START, SUM_START));
+		else
+			printf("\n\nSei la, eu chuto 0\n\n");
 
 	} else {
 
