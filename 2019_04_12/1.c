@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<math.h>
 
+
+/// A funcao lê um valor M e outros valores até 0 ser informado, e então informa o numero mais proximo de M até agora
 int main(){
 	
 	int m;
