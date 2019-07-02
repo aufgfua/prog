@@ -30,11 +30,15 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add directory="include" />
+			<Add directory="deps/include" />
 		</Compiler>
 		<Linker>
-			<Add library="lib-vc2019/glfw3.lib" />
-			<Add directory="lib-vc2019" />
+			<Add library="deps/lib-vc2019/glfw3dll.lib" />
+			<Add library="gdi32" />
+			<Add library="opengl32" />
+			<Add library="User32" />
+			<Add library="shell32" />
+			<Add directory="deps/lib-vc2019" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
