@@ -30,15 +30,19 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-DGLEW_STATIC" />
 			<Add directory="deps/include" />
+			<Add directory="deps/include/glew/include" />
 		</Compiler>
 		<Linker>
-			<Add library="deps/lib-vc2019/glfw3dll.lib" />
+			<Add library="deps/include/glew/lib/Release/Win32/glew32s.lib" />
+			<Add library="deps/libglfw3.a" />
 			<Add library="gdi32" />
 			<Add library="opengl32" />
 			<Add library="User32" />
 			<Add library="shell32" />
 			<Add directory="deps/lib-vc2019" />
+			<Add directory="deps/include/glew/lib/Release/Win32" />
 		</Linker>
 		<Unit filename="main.cpp" />
 		<Extensions>
