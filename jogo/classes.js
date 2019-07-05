@@ -2,10 +2,11 @@ var Monstro = function(x, y, vx, vy) {
     var monstro = new Entidade(x, y, vx, vy, (blocos, x, y, obj) => {
         if (blocos[x][y] == "O")
             perdeu();
-        else if (blocos[x][y] == "X") {
+        else if (blocos[x][y] == "X" || blocos[x][y] == "C") {
             obj.vx *= -1;
             obj.vy *= -1;
             blocos[obj.x][obj.y] = '-';
+            blocos[obj.x + obj.vx][obj.y + obj.vy] = '#';
 
         } else if (blocos[x][y] == '-') {
             blocos[x][y] = '#';
@@ -30,6 +31,12 @@ var Player = function(x, y, vx, vy) {
     var player = new Entidade(x, y, vx, vy, (blocos, x, y, obj) => {
         if (blocos[x][y] == "#")
             perdeu();
+		else
+        if (blocos[x][y] == "C"){
+			
+            blocos[obj.x][obj.y] = '-';
+            ganhou();
+		}
         else if (blocos[x][y] == "X") {
             obj.vx *= 0;
             obj.vy *= 0;
@@ -38,6 +45,7 @@ var Player = function(x, y, vx, vy) {
             blocos[x][y] = 'O';
             blocos[obj.x][obj.y] = '-';
             if (moedas[x][y]) {
+				document.getElementById('moeda').play();
                 moedas[x][y] = false;
                 pontos += 10;
             }

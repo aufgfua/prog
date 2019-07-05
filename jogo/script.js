@@ -14,6 +14,7 @@ var resizeY = Math.ceil(ctx.canvas.height / 10);
 
 var files;
 var nivel = 0;
+var filesOriginal;
 
 var player;
 
@@ -23,38 +24,56 @@ var moedas = [];
 
 var entidades = [];
 
+
+
 function arquivo(inputFiles) {
     if (typeof window.FileReader !== 'function')
         throw ("API de arquivo nao suportada");
 
     if (inputFiles) {
         $("#jogo").css("visibility", "visible");
+		document.getElementById("mortes").innerHTML = 0;
         files = {};
+        filesOriginal = [];
         var first = true;
         var count = 0;
         for (var f in inputFiles) {
             if (typeof inputFiles[f] !== 'object') continue;
             var reader = new FileReader();
             reader.readAsText(inputFiles[f]);
-            var localC = count;
+            var localC = count + 0;
+            count++;
             if (first) {
                 reader.onload = function(evt) {
 
-                    files[localC] = procFile(evt.target.result);
-
-                    play(0);
+                    filesOriginal[0] = procFile(evt.target.result);
+					nivel = 0;
+                    play(nivel);
                 }
                 first = false;
             } else
                 reader.onload = function(evt) {
 
-                    files[localC] = procFile(evt.target.result);
+                    filesOriginal[localC] = procFile(evt.target.result);
                 }
-            count++;
         }
     } else {
         console.log("Problema no arquivo")
     }
+}
+
+
+function ganhou(){
+	alert("GANHOU");
+	clearInterval(currentUpdate);
+	if(filesOriginal.length > nivel + 1){
+		nivel++;
+		play(nivel);
+	} else {
+		alert("Terminou todos os niveis");
+		$("#jogo").css("visibility", "hidden");
+	}
+		
 }
 
 
@@ -79,9 +98,20 @@ function procFile(file) {
 
 
 function play(nivel) {
+	
+	files[nivel] = [];
+	for(var x in filesOriginal[nivel]){
+		if(files[nivel][x] == undefined) files[nivel][x] = [];
+		for(var y in filesOriginal[nivel][x]){
+			files[nivel][x][y] = filesOriginal[nivel][x][y].slice(0);
+		}
+		
+	}
+	
+	
     createEntities(nivel);
 
-    currentUpdate = setInterval(() => { update(ctx, nivel) }, 50);
+    currentUpdate = setInterval(() => { update(ctx, nivel) }, 70 - 10*nivel);
 }
 
 function createEntities(nivel) {
@@ -119,15 +149,14 @@ function createEntities(nivel) {
 }
 
 function perdeu() {
-    alert("PERDEU OTARIO");
-    $("#jogo").css("visibility", "hidden");
-    clearInterval(currentUpdate);
-    if (files.length - 1 > nivel) {
-        nivel++;
-        play(nivel);
-    } else {
-        alert("ACABOOO");
-    }
+	
+    //$("#jogo").css("visibility", "hidden");
+    var mortes = document.getElementById("mortes").innerHTML;
+	mortes = Number(mortes) + 1;
+	document.getElementById("mortes").innerHTML = mortes;
+	clearInterval(currentUpdate);
+	play(nivel);
+	
 }
 
 document.onkeydown = checkKey;
