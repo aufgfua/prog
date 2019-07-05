@@ -1,14 +1,18 @@
 var Monstro = function(x, y, vx, vy) {
-    var monstro = new Entidade(x, y, vx, vy, (blocos, x, y) => {
+    var monstro = new Entidade(x, y, vx, vy, (blocos, x, y, obj) => {
         if (blocos[x][y] == "O")
             perdeu();
         else if (blocos[x][y] == "X") {
-            this.vx *= -1;
-            this.vy *= -1;
+            obj.vx *= -1;
+            obj.vy *= -1;
+            blocos[obj.x][obj.y] = '-';
 
         } else if (blocos[x][y] == '-') {
             blocos[x][y] = '#';
-            blocos[this.x][this.y] = '-';
+            blocos[obj.x][obj.y] = '-';
+        } else if (blocos[x][y] == '#') {
+            blocos[x][y] = '#';
+            blocos[obj.x][obj.y] = '-';
         }
 
 
@@ -23,18 +27,18 @@ var Monstro = function(x, y, vx, vy) {
 
 
 var Player = function(x, y, vx, vy) {
-    var player = new Entidade(x, y, vx, vy, (blocos, x, y) => {
+    var player = new Entidade(x, y, vx, vy, (blocos, x, y, obj) => {
         if (blocos[x][y] == "#")
             perdeu();
         else if (blocos[x][y] == "X") {
-            this.vx *= 0;
-            this.vy *= 0;
+            obj.vx *= 0;
+            obj.vy *= 0;
 
         } else if (blocos[x][y] == '-') {
             blocos[x][y] = 'O';
-            blocos[this.x][this.y] = '-';
-            if (blocos[x][y].moeda) {
-                blocos[x][y].moeda = false;
+            blocos[obj.x][obj.y] = '-';
+            if (moedas[x][y]) {
+                moedas[x][y] = false;
                 pontos += 10;
             }
         }
@@ -53,11 +57,11 @@ var Player = function(x, y, vx, vy) {
 
 var Entidade = function(x, y, vx, vy, andaBloco) {
 
-    this.x = x;
-    this.y = y;
+    this.x = Number(x);
+    this.y = Number(y);
 
-    this.vx = vx;
-    this.vy = vy;
+    this.vx = Number(vx);
+    this.vy = Number(vy);
 
     this.anda = function(blocos) {
         var posX = this.x + this.vx;
@@ -66,7 +70,7 @@ var Entidade = function(x, y, vx, vy, andaBloco) {
         for (var x in blocos) {
             for (var y in blocos[x]) {
                 if (x == posX && y == posY) {
-                    andaBloco(blocos, x, y);
+                    andaBloco(blocos, x, y, this);
                 }
             }
         }

@@ -48,10 +48,13 @@
 	<GL/glu.h>
 	<vulkan/vulkan.h>
 
-1562087475 source:\\homes\afflach\desktop\prog-master\openglame\main.cpp
-	<GL/glew.h>
-	<GLFW/glfw3.h>
-	<iostream>
+1562334089 source:\\homes\afflach\desktop\prog-master\openglame\main.cpp
+	<Windows.h>
+	<stdio.h>
+	<string.h>
+	<time.h>
+	<stdlib.h>
+	<conio.h>
 
 1562022238 \\homes\afflach\desktop\prog-master\openglame\deps\include\glfw\glfw3.h
 	<stddef.h>
