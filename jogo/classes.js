@@ -29,15 +29,16 @@ var Monstro = function(x, y, vx, vy) {
 
 var Player = function(x, y, vx, vy) {
     var player = new Entidade(x, y, vx, vy, (blocos, x, y, obj) => {
-        if (blocos[x][y] == "#")
+        if (blocos[x][y] == "#") {
+
             perdeu();
-		else
-        if (blocos[x][y] == "C"){
-			
+            document.getElementById('errou').play();
+        } else
+        if (blocos[x][y] == "C") {
+
             blocos[obj.x][obj.y] = '-';
             ganhou();
-		}
-        else if (blocos[x][y] == "X") {
+        } else if (blocos[x][y] == "X") {
             obj.vx *= 0;
             obj.vy *= 0;
 
@@ -45,9 +46,10 @@ var Player = function(x, y, vx, vy) {
             blocos[x][y] = 'O';
             blocos[obj.x][obj.y] = '-';
             if (moedas[x][y]) {
-				document.getElementById('moeda').play();
+                document.getElementById('moeda').play();
                 moedas[x][y] = false;
-                pontos += 10;
+                pontos += 30;
+                atualizaPontos();
             }
         }
 
