@@ -95,13 +95,15 @@ function arquivo(inputFiles) {
         document.getElementById("mortes").innerHTML = 0;
         files = {};
         filesOriginal = [];
+        first = true;
         var count = 0;
         for (var f in inputFiles) {
             if (typeof inputFiles[f] !== 'object') continue;
             var reader = new FileReader();
             reader.readAsText(inputFiles[f]);
-            var localC = count + 0;
+            let localC = count + 0;
             count++;
+
             reader.onload = function(evt) {
 
                 filesOriginal[localC] = procFile(evt.target.result);
@@ -118,8 +120,13 @@ function arquivo(inputFiles) {
 // Para outros sons antes de tocar a musica
 function stop(el) {
     var sounds = document.getElementsByTagName('audio');
-    for (i = 0; i < sounds.length; i++)
-        if (sounds[i].id !== el.id) sounds[i].pause();
+    for (i = 0; i < sounds.length; i++) {
+        if (sounds[i].id !== el.id) {
+            sounds[i].pause();
+
+        }
+
+    }
 
 
 
