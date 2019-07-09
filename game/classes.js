@@ -1,3 +1,12 @@
+/**
+ * 
+ * Retorna um objeto do tipo entidade, especializado para um Monstro
+ * 
+ * A função para movimento chamada pela entidade do tipo Monstro realiza colisão com o jogador (O),
+ * com o fim do nível (C) e com paredes (X). Quando um monstro colide com uma parede ou com o fim do
+ * nível, sua movimentação nos eixos é rebatida
+ * 
+ */
 var Monstro = function(x, y, vx, vy) {
     var monstro = new Entidade(x, y, vx, vy, (blocos, x, y, obj) => {
         if (blocos[x][y] == "O")
@@ -26,18 +35,26 @@ var Monstro = function(x, y, vx, vy) {
 
 
 
-
+/**
+ * 
+ * Retorna um objeto do tipo entidade, especializado para um jogador
+ * 
+ * A função para movimento chamada pela entidade do tipo jogador realiza colisão com monstros (#),
+ * com o fim do nível (c), com paredes (X) e moedas (M)
+ * 
+ */
 var Player = function(x, y, vx, vy) {
     var player = new Entidade(x, y, vx, vy, (blocos, x, y, obj) => {
-        if (blocos[x][y] == "#")
+        if (blocos[x][y] == "#") {
+
             perdeu();
-		else
-        if (blocos[x][y] == "C"){
-			
+            document.getElementById('errou').play();
+        } else
+        if (blocos[x][y] == "C") {
+
             blocos[obj.x][obj.y] = '-';
             ganhou();
-		}
-        else if (blocos[x][y] == "X") {
+        } else if (blocos[x][y] == "X") {
             obj.vx *= 0;
             obj.vy *= 0;
 
@@ -45,9 +62,10 @@ var Player = function(x, y, vx, vy) {
             blocos[x][y] = 'O';
             blocos[obj.x][obj.y] = '-';
             if (moedas[x][y]) {
-				document.getElementById('moeda').play();
+                document.getElementById('moeda').play();
                 moedas[x][y] = false;
-                pontos += 10;
+                pontos += 30;
+                atualizaPontos();
             }
         }
 
@@ -61,7 +79,17 @@ var Player = function(x, y, vx, vy) {
 
 
 
-
+/**
+ * 
+ * Entidade : Number Number Number Number (Matriz[int][int] Number Number Entidade -> Void) -> Void
+ * 
+ * Cria e popula um objeto de entidade com os atributos X e Y (na matriz)
+ * Vx e Vy, velocidades nos eixos (são 1, 0 ou -1)
+ * E a funcao Anda, que realiza o movimento da entidade, recebendo a lista de blocos do jogo (matriz).
+ * A funcão anda chama a função recebida como parametro em andaBloco, que passa a lista de blocos (matriz)
+ * recebida, a posicao X e Y futura do objeto e ao objeto que está inserida
+ * 
+ */
 
 var Entidade = function(x, y, vx, vy, andaBloco) {
 
