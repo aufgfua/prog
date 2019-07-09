@@ -1,14 +1,14 @@
 var ctx = document.getElementById("jogo").getContext("2d");
-ctx.canvas.height = $("body").height() / 2;
-ctx.canvas.width = $("body").width() * 3 / 4;
+ctx.canvas.height = $("body").height() * 0.6;
+ctx.canvas.width = $("body").width() * 0.75;
 
 
 // Todas as variaveis do script criadas
 
 
 //Aqui só constantes
-const delay = 30;
-const soma = 50;
+const delay = 50;
+const soma = 20;
 const pontosDiminui = 10;
 const MAX_RANK = 10;
 
@@ -19,7 +19,7 @@ const left = 37;
 const right = 39;
 const esc = 27;
 
-
+var andou = false;
 
 // Variavel do ranking temporaria pra quando forem chamar pelo localstorage
 var ranking;
@@ -35,7 +35,7 @@ var pontosF = 0;
 
 //Corrigir a proporcao do print
 var resizeX = Math.ceil(ctx.canvas.width / 40);
-var resizeY = Math.ceil(ctx.canvas.height / 10);
+var resizeY = Math.ceil(ctx.canvas.height / 15);
 
 
 //Arquivos temporarios e originais pra reiniciar o nivel (e o nivel que está sendo jogado) (São arrays, a posicao atual é a "nivel")
@@ -137,11 +137,10 @@ function ganhou() {
 
     //Toca a musica da vitória
     document.getElementById('fase').play();
-
-
-    // fecha intervalos do jogo
     clearInterval(currentUpdate);
     clearInterval(intervaloDiminui);
+
+
 
     //Soma os pontos da fase
     pontos += pontosF;
@@ -194,6 +193,10 @@ function procFile(file) {
 function play(nivel) {
 
 
+
+    clearInterval(currentUpdate);
+    clearInterval(intervaloDiminui);
+
     // Bind das funcoes de evento de teclas
     document.onkeydown = checkKey;
     document.onkeyup = checkKeyUp;
@@ -230,12 +233,11 @@ function play(nivel) {
     // Pra poder clicar em continuar no menu
     podeContinuar = true;
 
+
     // Cria as entidades pra se mexerem do jogo
     createEntities(nivel);
 
     // Fecha os intervalos pra reiniciar depois
-    clearInterval(currentUpdate);
-    clearInterval(intervaloDiminui);
 
 
     // Se o play é porque iniciou um nivel novo, morreu é false, então começa a pontuacao da fase me 1000
@@ -251,7 +253,7 @@ function play(nivel) {
 
     //E inicia os loops do jogo
     intervaloDiminui = setInterval(() => { diminuiPontos() }, 1000);
-    currentUpdate = setInterval(() => { update(ctx, nivel) }, delay + soma / (nivel + 1));
+    currentUpdate = setInterval(() => { update(ctx, nivel); }, delay + soma / (nivel + 1));
 }
 
 
@@ -304,27 +306,27 @@ function createEntities(nivel) {
                     break;
 
                 case 'H':
-                    entidades.push(Monstro(x, y, 1, 0));
+                    entidades.unshift(Monstro(x, y, 0, 1));
                     file[x][y] = "#";
                     break;
                 case 'E':
-                    entidades.push(Monstro(x, y, -1, 0));
+                    entidades.unshift(Monstro(x, y, 0, -1));
                     file[x][y] = "#";
                     break;
                 case 'D':
-                    entidades.push(Monstro(x, y, 1, 0));
+                    entidades.unshift(Monstro(x, y, 0, 1));
                     file[x][y] = "#";
                     break;
                 case 'V':
-                    entidades.push(Monstro(x, y, 0, 1));
+                    entidades.unshift(Monstro(x, y, 1, 0));
                     file[x][y] = "#";
                     break;
                 case 'S':
-                    entidades.push(Monstro(x, y, 0, -1));
+                    entidades.unshift(Monstro(x, y, -1, 0));
                     file[x][y] = "#";
                     break;
                 case 'B':
-                    entidades.push(Monstro(x, y, 0, 1));
+                    entidades.unshift(Monstro(x, y, 1, 0));
                     file[x][y] = "#";
                     break;
                 case 'M':
@@ -356,20 +358,24 @@ function perdeu() {
 
 // Pra quando solta uma tecla, liberar a movimentacao naquele sentido
 function checkKeyUp(e) {
-    if (e.keyCode == esc)
-        voltar();
-    var event = window.event ? window.event : e;
-    if (event.keyCode == up) {
-        player.vx = 0;
-    }
-    if (event.keyCode == down) {
-        player.vx = 0;
-    }
-    if (event.keyCode == left) {
-        player.vy = 0;
-    }
-    if (event.keyCode == right) {
-        player.vy = 0;
+    if (andou) {
+        if (e.keyCode == esc)
+            voltar();
+        var event = window.event ? window.event : e;
+        if (event.keyCode == up) {
+            player.vx = 0;
+        }
+        if (event.keyCode == down) {
+            player.vx = 0;
+        }
+        if (event.keyCode == left) {
+            player.vy = 0;
+        }
+        if (event.keyCode == right) {
+            player.vy = 0;
+        }
+    } else {
+        setTimeout(() => checkKeyUp(e), 50);
     }
 }
 
@@ -381,15 +387,19 @@ function checkKey(e) {
     var event = window.event ? window.event : e;
     if (event.keyCode == up) {
         player.vx = -1;
+        andou = false;
     }
     if (event.keyCode == down) {
         player.vx = 1;
+        andou = false;
     }
     if (event.keyCode == left) {
         player.vy = -1;
+        andou = false;
     }
     if (event.keyCode == right) {
         player.vy = 1;
+        andou = false;
     }
 }
 
@@ -398,6 +408,7 @@ function update(ctx, level) {
     for (var e in entidades) {
         entidades[e].anda(files[level]);
     }
+    andou = true;
     draw(ctx, files[level]);
 }
 
@@ -407,6 +418,7 @@ function draw(ctx, blocos) {
     for (var x in blocos) {
         for (var y in blocos[x]) {
             var cor;
+            var nada = true;
             switch (blocos[x][y]) {
                 case 'X':
                     cor = "#333333";
@@ -419,16 +431,17 @@ function draw(ctx, blocos) {
                     break;
                 case '#':
                     cor = "#FF0000";
+                    nada = false;
                     break;
                 case "C":
                     cor = "#00FF00";
                     break;
 
             }
-            if (moedas[x][y]) cor = "#FFFF00";
+            if (moedas[x][y] && nada) cor = "#FFFF00";
             ctx.fillStyle = cor;
 
-            // Preenche cada um dos retangulos (a esquacao é os resizes pelo tamanho do canvas lá do começo)
+            // Preenche cada um dos retangulos (a equacao é os resizes pelo tamanho do canvas lá do começo)
             ctx.fillRect(y * resizeX, x * resizeY, resizeX, resizeY);
 
         }

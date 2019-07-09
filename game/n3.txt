@@ -1,0 +1,15 @@
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X-----XM--------------M----------------X
+X-----X---------------XD---M------M----X
+X-----X---------------X------M--M-----EX
+X-----X---------------XD---------------X
+X-----X---------------X---------------EX
+X-------S-S-S-S-S-S-S-XCCCCCCCCCCCCCCCCX
+X--O------------------XCCCCCCCCCCCCCCCCX
+X------B-B-B-B-B-B-B-BXCCCCCCCCCCCCCCCCX
+X-----X---------------X---------------EX
+X-----X---------------XD---------------X
+X-----X---------------X------M--M-----EX
+X-----X---------------XD---M------M----X
+X-----XM--------------M----------------X
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
